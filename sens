@@ -1,0 +1,24 @@
+#!/usr/bin/python3
+
+import os
+
+NAME = 'Logitech G502 HERO Gaming Mouse      '
+SENS = -1
+
+# Fetch mouse id
+devices = os.popen('xinput').readlines()
+mouse = [d for d in devices if NAME in d][0].split('=')[1].split('\t')[0]
+print(f'* Fetched mouse \033[92m{mouse}\033[0m.')
+
+# Fetch mouse accel property
+props = os.popen(f'xinput --list-props {mouse}').readlines()
+accel = [p for p in props if 'libinput Accel Speed (' in p][0]\
+        .split('(')[1].split(')')[0]
+print(f'* Fetched accel speed \033[92m{accel}\033[0m.')
+
+# Change mouse accel speed
+print(f'* Changing mouse accel speed to \033[92m{SENS}\033[0m')
+res = os.popen(f'xinput --set-prop {mouse} {accel} {SENS}').read()
+
+# if not res: print(f'Successfully changed mouse accel speed to \033[92m{SENS}\033[0m.')
+# else: print(f'Failed to change mouse accel speed:\n\033[91m{res}\033[0m')
